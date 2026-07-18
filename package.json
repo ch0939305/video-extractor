@@ -1,0 +1,9 @@
+{
+  "name": "video-text-extractor",
+  "version": "1.0.0",
+  "description": "影片文案提取工具 - Vercel Serverless",
+  "main": "api/extract.js",
+  "dependencies": {
+    "axios": "^1.7.2"
+  }
+}
