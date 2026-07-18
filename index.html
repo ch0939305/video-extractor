@@ -220,8 +220,6 @@ transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); pointer-events: none; max-
 // ===== 設定（部署後改這裡） =====
 // 方式 A：使用 Vercel 後端 API
 const API_BASE = 'https://video-extractor-five.vercel.app/api/extract';
-// 方式 B：直接使用免費 API（無需後端，但較不穩定）
-const FALLBACK_API = 'https://api.douyin.wtf/api';
 
 // ===== 狀態 =====
 let extractHistory = JSON.parse(localStorage.getItem('video-extract-history') || '[]');
@@ -328,10 +326,17 @@ async function doExtract() {
     document.getElementById('textOutput').value = caption;
     document.getElementById('platformBadge').textContent = platform ? '📺 ' + platform : '';
     result.classList.add('visible');
+    document.getElementById('textOutput').readOnly = false;
     setTimeout(() => result.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
     showToast('提取成功 ✓');
   } else {
-    showToast('無法提取文案，請確認連結是否正確', 'error');
+    lastResult = '';
+    document.getElementById('textOutput').value = '⚠️ 無法自動提取該影片的文案。\n\n可能原因：\n· 抖音/Douyin 有反爬機制，第三方 API 無法存取\n· 該影片無文字描述\n· API 限流\n\n📝 你可以直接在上面手動輸入或貼上文案內容，然後按「保存」留存。';
+    document.getElementById('platformBadge').textContent = '⚠️ 提取失敗';
+    document.getElementById('textOutput').readOnly = false;
+    result.classList.add('visible');
+    setTimeout(() => result.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+    showToast('無法自動提取，可手動輸入', 'error');
   }
 }
 
